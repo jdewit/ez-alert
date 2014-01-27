@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+  <style>
+
+  </style>
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.7.0/ui-bootstrap.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+
+  <script src="src/ez-alert.js"></script>
+  <script src="dist/-tpl.js"></script>
+
+  <script>
+    angular.module('myApp', ['ez.alert', 'ui.bootstrap'])
+
+      .controller('AppCtrl', ['$scope', function($scope) {
+
+      }])
+      ;
+
+  </script>
+</head>
+<body ng-app="myApp">
+
+  <div class="container">
+    <div ng-controller="AppCtrl">
+
+    </div>
+  </div>
+
+</body>
+
+</html>
+

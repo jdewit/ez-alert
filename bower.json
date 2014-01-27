@@ -1,0 +1,13 @@
+{
+  "name": "ez-alert",
+  "description": "ez-alert",
+  "author": "Joris de Wit",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "latest",
+  },
+  "devDependencies": {
+    "angular-mocks": "latest"
+  }
+}
+

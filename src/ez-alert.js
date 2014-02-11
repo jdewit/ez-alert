@@ -20,7 +20,7 @@ angular.module('ez.alert', ['ui.bootstrap'])
   };
 }])
 
-.service('Alert', ['$timeout', '$modal', function($timeout, $modal) {
+.service('Alert', ['$interval', '$modal', function($interval, $modal) {
   var alerts = [],
       modalAlerts = [],
       s,
@@ -70,8 +70,8 @@ angular.module('ez.alert', ['ui.bootstrap'])
       }
 
       if (s) {
-        $timeout.cancel(s);
-        $timeout.cancel(t);
+        $interval.cancel(s);
+        $interval.cancel(t);
       }
 
       if (inModal) {
@@ -80,14 +80,14 @@ angular.module('ez.alert', ['ui.bootstrap'])
       } else {
         alerts.push({type: type, msg: msg});
       }
-      s = $timeout(function() {
+      s = $interval(function() {
         $('.alert').slideUp('slow');
-      }, 8000);
+      }, 8000, 1);
 
       var that = this;
-      t = $timeout(function() {
+      t = $interval(function() {
         that.clear();
-      }, 10000);
+      }, 10000, 1);
     }
   };
 }]);

@@ -14,13 +14,7 @@ angular.module('ez.alert', ['ui.bootstrap'])
   };
 }])
 
-.controller('NotifyCtrl', ['$scope', '$modalInstance', function($scope, $modalInstance) {
-  $scope.cancel = function() {
-    $modalInstance.dismiss();
-  };
-}])
-
-.service('Alert', ['$interval', '$modal', function($interval, $modal) {
+.service('Alert', ['$interval', function($interval) {
   var alerts = [],
       modalAlerts = [],
       s,
@@ -37,26 +31,8 @@ angular.module('ez.alert', ['ui.bootstrap'])
     getModalAlerts: function() {
       return modalAlerts;
     },
-    notify: function(header, text) {
-      $modal.open({
-        template: 'ez-alert-notify-tpl.html',
-        controller: 'NotifyCtrl',
-        resolve: {
-          header: function() {
-            return header;
-          },
-          text: function() {
-            return text;
-          }
-        }
-      }).result.then(function(callback) {
-        if (callback) {
-          callback();
-        }
-      });
-    },
     error: function(msg, inModal, noClear) {
-      this.add('error', msg, inModal, noClear);
+      this.add('danger', msg, inModal, noClear);
     },
     warning: function(msg, inModal, noClear) {
       this.add('warning', msg, inModal, noClear);

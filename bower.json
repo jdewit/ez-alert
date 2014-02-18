@@ -7,7 +7,7 @@
     "angular": "latest"
   },
   "devDependencies": {
-    "angular-mocks": "latest"
+    "angular-mocks": "latest",
+    "grunt-contrib-clean": "~0.4.0"
   }
 }
-

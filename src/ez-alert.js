@@ -6,9 +6,6 @@ angular.module('ez.alert', ['ui.bootstrap'])
   $scope.$watch(Alert.get, function() {
     $scope.alerts = Alert.get();
   });
-  $scope.$watch(Alert.getModalAlerts, function() {
-    $scope.modalAlerts = Alert.getModalAlerts();
-  });
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
   };
@@ -16,31 +13,26 @@ angular.module('ez.alert', ['ui.bootstrap'])
 
 .service('Alert', ['$interval', function($interval) {
   var alerts = [],
-      modalAlerts = [],
       s,
       t;
 
   return {
     clear: function() {
       alerts = [];
-      modalAlerts = [];
     },
     get: function() {
       return alerts;
     },
-    getModalAlerts: function() {
-      return modalAlerts;
+    error: function(msg, noClear) {
+      this.add('danger', msg, noClear);
     },
-    error: function(msg, inModal, noClear) {
-      this.add('danger', msg, inModal, noClear);
+    warning: function(msg, noClear) {
+      this.add('warning', msg, noClear);
     },
-    warning: function(msg, inModal, noClear) {
-      this.add('warning', msg, inModal, noClear);
+    success: function(msg, noClear) {
+      this.add('success', msg, noClear);
     },
-    success: function(msg, inModal, noClear) {
-      this.add('success', msg, inModal, noClear);
-    },
-    add: function(type, msg, inModal, noClear) {
+    add: function(type, msg, noClear) {
       if (!noClear) {
         this.clear();
       }
@@ -50,12 +42,8 @@ angular.module('ez.alert', ['ui.bootstrap'])
         $interval.cancel(t);
       }
 
-      if (inModal) {
-        $('.modal.in .alert').remove();
-        $('.modal.in .modal-body').prepend('<div class="alert alert-' + type + '">' + msg + '</div>');
-      } else {
-        alerts.push({type: type, msg: msg});
-      }
+      alerts.push({type: type, msg: msg});
+
       s = $interval(function() {
         $('.alert').slideUp('slow');
       }, 8000, 1);

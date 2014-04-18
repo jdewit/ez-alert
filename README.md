@@ -43,7 +43,7 @@ Add ez-alert markup to your html and include the dist files
 Demo
 ----
 
-See plunkr for a live demo of the example in index.html.
+See <a href="http://embed.plnkr.co/Ed3VOV/preview" target="_blank">live demo</a> of the example in index.html.
 
 ***
-Generated with <a href="http://github.com/jdewit/generator-ez-module">ez-module</a>
+Generated with <a href="http://github.com/jdewit/generator-ez-module" target="_blank">ez-module</a>

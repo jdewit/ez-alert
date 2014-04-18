@@ -1,0 +1,9 @@
+<div class="ez-alert-container">
+  <div class="ez-alert-item" ng-repeat="alert in alerts" ng-class="{'ez-hide': alert.hide}">
+    <div class="{{ alert.alertClass }}">
+      <a class="close" aria-hidden="true" ng-click="hideAlert($index)">&times;</a>
+      <div ng-bind="alert.msg"></div>
+    </div>
+  </div>
+</div>
+

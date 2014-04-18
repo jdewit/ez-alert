@@ -1,0 +1,15 @@
+.ez-alert-container {
+  .ez-alert-item {
+    overflow: hidden;  
+    max-height: 50px;
+
+    &.ez-hide {
+      max-height: 0;
+      -webkit-transition: max-height 0.25s linear;
+      -moz-transition: max-height 0.25s linear;
+      -ms-transition: max-height 0.25s linear;
+      -o-transition: max-height 0.25s linear;
+      transition: max-height 0.25s linear;
+    }
+  } 
+}

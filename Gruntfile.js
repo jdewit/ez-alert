@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     bump: {
       options: {
         files: ['package.json', 'bower.json'],
-        commit: true,
+        commit: false,
         push: false,
         commitMessage: 'Release v%VERSION%',
         commitFiles: ['package.json', 'bower.json']
@@ -37,6 +37,26 @@ module.exports = function(grunt) {
     clean: {
       coverage: 'coverage'
     },
+    less: {
+      dist: {
+        options: {
+          yuicompress: true
+        },
+        files: {
+          "dist/ez-alert.min.css": "src/ez-alert.less"
+        }
+      }
+    },
+    ngtemplates: {
+      ezAlert: {
+        src:      'src/*.html',
+        dest:     'dist/ez-alert-tpl.js',
+        options: {
+          module: 'ez.alert',
+          url: function(url) { return url.replace('src/', ''); }
+        }
+      }
+    },
     uglify: {
       options: {
         mangle: true,
@@ -64,12 +84,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-angular-templates');
 
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'ngtemplates', 'less', 'uglify']);
   grunt.registerTask('dev', ['clean', 'karma:unit:start', 'watch']);
   grunt.registerTask('test', ['karma:unit:singleRun']);
 };

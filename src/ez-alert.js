@@ -1,20 +1,33 @@
 'use_strict';
 
-angular.module('ez.alert', ['ui.bootstrap'])
+angular.module('ez.alert', [])
 
-.controller('AlertCtrl', ['$scope', 'Alert', function($scope, Alert) {
-  $scope.$watch(Alert.get, function() {
-    $scope.alerts = Alert.get();
-  });
-  $scope.closeAlert = function(index) {
-    $scope.alerts.splice(index, 1);
+.constant('EzAlertConfig', {
+  successClass: 'alert alert-success',
+  warningClass: 'alert alert-warning',
+  errorClass: 'alert alert-danger',
+  delay: 8000,
+  insertFirst: true // insert the alert into the first position of the array. Else insert last
+})
+
+.directive('ezAlert', ['EzAlert', function(EzAlert) {
+  return {
+    restrict: 'EA',
+    templateUrl: 'ez-alert-tpl.html',
+    link: function(scope) {
+      scope.$watch(EzAlert.get, function() {
+        scope.alerts = EzAlert.get();
+      });
+
+      scope.hideAlert = function(index) {
+        EzAlert.hide(scope.alerts[index], 0);
+      };
+    }
   };
 }])
 
-.service('Alert', ['$interval', function($interval) {
-  var alerts = [],
-      s,
-      t;
+.service('EzAlert', ['$interval', 'EzAlertConfig', function($interval, EzAlertConfig) {
+  var alerts = [];
 
   return {
     clear: function() {
@@ -24,7 +37,7 @@ angular.module('ez.alert', ['ui.bootstrap'])
       return alerts;
     },
     error: function(msg, noClear) {
-      this.add('danger', msg, noClear);
+      this.add('error', msg, noClear);
     },
     warning: function(msg, noClear) {
       this.add('warning', msg, noClear);
@@ -33,25 +46,25 @@ angular.module('ez.alert', ['ui.bootstrap'])
       this.add('success', msg, noClear);
     },
     add: function(type, msg, noClear) {
+      var alertItem = {
+        alertClass: EzAlertConfig[type + 'Class'],
+        msg: msg
+      };
+
+      if (EzAlertConfig.insertFirst) {
+        alerts.unshift(alertItem);
+      } else {
+        alerts.push(alertItem);
+      }
+
       if (!noClear) {
-        this.clear();
+        this.hide(alertItem, EzAlertConfig.delay);
       }
-
-      if (s) {
-        $interval.cancel(s);
-        $interval.cancel(t);
-      }
-
-      alerts.push({type: type, msg: msg});
-
-      s = $interval(function() {
-        $('.alert').slideUp('slow');
-      }, 8000, 1);
-
-      var that = this;
-      t = $interval(function() {
-        that.clear();
-      }, 10000, 1);
+    },
+    hide: function(alertItem, delay) {
+      $interval(function() {
+        alertItem.hide = true;
+      }, delay, 1);
     }
   };
 }]);

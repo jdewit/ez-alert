@@ -5,40 +5,33 @@
 
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <link href="dist/ez-alert.min.css" rel="stylesheet">
 
-  <style>
-
-  </style>
-
-  <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
-  <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
-
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.7.0/ui-bootstrap.min.js"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
-
-  <script src="src/ez-alert.js"></script>
-  <script src="dist/-tpl.js"></script>
-
-  <script>
-    angular.module('myApp', ['ez.alert', 'ui.bootstrap'])
-
-      .controller('AppCtrl', ['$scope', function($scope) {
-
-      }])
-      ;
-
-  </script>
 </head>
 <body ng-app="myApp">
 
   <div class="container">
+    <ez-alert></ez-alert>
     <div ng-controller="AppCtrl">
-
+      <a class="btn btn-success" ng-click="addAlert('success')">Add Alert</a>
+      <a class="btn btn-warning" ng-click="addAlert('warning')">Add Alert</a>
+      <a class="btn btn-danger" ng-click="addAlert('error')">Add Alert</a>
     </div>
   </div>
 
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+  <script src="src/ez-alert.js"></script>
+  <script src="dist/ez-alert-tpl.js"></script>
+  <script>
+    angular.module('myApp', ['ez.alert'])
+      .controller('AppCtrl', ['$scope', 'EzAlert', function($scope, EzAlert) {
+        $scope.addAlert = function(type) {
+        console.log(type);
+          EzAlert[type](type + ' alert added');
+        };
+      }])
+      ;
+  </script>
 </body>
 
 </html>

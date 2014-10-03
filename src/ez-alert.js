@@ -7,6 +7,7 @@ angular.module('ez.alert', [])
   warningClass: 'alert alert-warning',
   errorClass: 'alert alert-danger',
   delay: 8000,
+  maxAlerts: 5,
   insertFirst: true // insert the alert into the first position of the array. Else insert last
 })
 
@@ -50,6 +51,14 @@ angular.module('ez.alert', [])
         alertClass: EzAlertConfig[type + 'Class'],
         msg: msg
       };
+
+      if (alerts.length >= EzAlertConfig.maxAlerts) {
+        if (EzAlertConfig.insertFirst) {
+          alerts.pop();
+        } else {
+          alerts.shift();
+        }
+      }
 
       if (EzAlertConfig.insertFirst) {
         alerts.unshift(alertItem);

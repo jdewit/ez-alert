@@ -1,6 +1,7 @@
 .ez-alert-container .ez-alert-item {
   overflow: hidden;
   margin-bottom: -5px;
+  margin-right: 10px;
   max-height: 0;
 }
 .ez-alert-container .ez-alert-item.ez-show {

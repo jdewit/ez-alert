@@ -52,11 +52,23 @@ angular.module('ez.alert', [])
         msg: msg
       };
 
+      $interval(function() {
+        alertItem.show = true;
+      }, 50, 1);
+
       if (alerts.length >= EzAlertConfig.maxAlerts) {
         if (EzAlertConfig.insertFirst) {
-          alerts.pop();
+          this.hide(alerts[alerts.length - 1]);
+
+          $interval(function() {
+            alerts.pop();
+          }, EzAlertConfig.delay, 1);
         } else {
-          alerts.shift();
+          this.hide(alerts[0]);
+          
+          $interval(function() {
+            alerts.shift();
+          }, EzAlertConfig.delay, 1);
         }
       }
 
@@ -72,6 +84,7 @@ angular.module('ez.alert', [])
     },
     hide: function(alertItem, delay) {
       $interval(function() {
+        alertItem.show = false;
         alertItem.hide = true;
       }, delay, 1);
     }

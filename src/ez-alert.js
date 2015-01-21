@@ -58,17 +58,17 @@ angular.module('ez.alert', [])
         msg: msg
       };
 
-      var duplicateFound = this.findDuplicates(alertItem, noClear);
+      var duplicateFound = this.findDuplicates(alertItem);
 
       if (!!duplicateFound) {
         return;
       }
 
-      $interval(function() {
+      alertItem.showPromise = $interval(function() {
         alertItem.show = true;
       }, 1, 1);
 
-      this.hideExcessAlerts(this, true);
+      this.hideExcessAlerts(this);
 
       if (EzAlertConfig.insertFirst) {
         alerts.unshift(alertItem);
@@ -77,20 +77,16 @@ angular.module('ez.alert', [])
       }
 
       if (!noClear) {
-        this.hide(alertItem, EzAlertConfig.delay);
+        this.hide(this, alertItem, EzAlertConfig.delay);
       }
     },
-    findDuplicates: function(newAlert, noClear) {
+    findDuplicates: function(newAlert) {
       var that = this;
 
       for (var i = 0, l = alerts.length; i < l; i++) {
         var alertItem = alerts[i];
 
         if (alertItem.alertClass === newAlert.alertClass && alertItem.msg === newAlert.msg) {
-          if (!noClear) {
-            alertItem.resetDelay = true;
-          }
-
           that.hideAndShow(alertItem);
 
           return true;
@@ -99,75 +95,67 @@ angular.module('ez.alert', [])
 
       return false;
     },
-    hideExcessAlerts: function(that, repeat) {
+    hideExcessAlerts: function(that) {
       if (alerts.length >= EzAlertConfig.maxAlerts) {
         var excessCount = alerts.length - EzAlertConfig.maxAlerts + 1;
 
         for (var i = 0, l = excessCount; i < l; i++) {
           if (EzAlertConfig.insertFirst) {
-            that.hide(alerts[alerts.length - (i + 1)], 0, true);
+            that.hide(that, alerts[alerts.length - (i + 1)], 0, true);
           }
           else {
-            that.hide(alerts[i], 0, true);
+            that.hide(that, alerts[i], 0, true);
           }
         }
       }
-
-      if (!repeat) {
-        $interval(function() {
-          that.hideExcessAlerts(that, false);
-        }, 100, 1);
-      }
     },
-    hide: function(alertItem, delay, immediateRemoval) {
-      var that = this;
-
+    hide: function(that, alertItem, delay, immediateRemoval) {
       var removalDelay = !!immediateRemoval ? 1000 : (delay + 1000);
 
-      $interval(function() {
-        /*if (!!alertItem.resetDelay) {
-          delete alertItem.resetDelay;
-          that.hide(alertItem, delay, immediateRemoval);
-          
-          return;
-        }*/
-
-        alertItem.show = false;
-        alertItem.hide = true;
+      alertItem.hidePromise = $interval(function() {
+        that.hideInterval(alertItem);
       }, delay, 1);
 
-      $interval(function() {
-        if (EzAlertConfig.insertFirst) {
-          alerts.pop();
-        } else {
-          alerts.shift();
-        }
+      alertItem.removePromise = $interval(function() {
+        that.removeInterval(alertItem);
       }, removalDelay, 1);
+    },
+    showInterval: function(alertItem) {
+      alertItem.hide = false;
+      alertItem.show = true;
+    },
+    hideInterval: function(alertItem) {
+      alertItem.show = false;
+      alertItem.hide = true;
+    },
+    removeInterval: function(alertItem) {
+      alerts.splice(alerts.indexOf(alertItem), 1);
     },
     hideAndShow: function(alertItem) {
       var that = this;
 
-      alertItem.show = false;
-      alertItem.hide = true;
+      if (!!alertItem.hidePromise || !!alertItem.removePromise) {
+        if (!!alertItem.hidePromise) {
+          $interval.cancel(alertItem.hidePromise);
+        }
+        if (!!alertItem.removePromise) {
+          $interval.cancel(alertItem.removePromise);
+        }
+      }
 
-      /* Note about fast repetitions of duplicate items:
-       * If duplicates appear in less than 500 ms,
-       * One duplicate will remain on screen.
+      that.hideInterval(alertItem);
+
+      /* NOTE about rapid successions of duplicate alerts:
+       * If the time between alerts being added is less than 1 second,
+       * the show/hide behaviour will not be consistent
+       * (ie. re-shows fewer and last show gets hidden immediately).
        */
 
       $interval(function() {
-        alertItem.hide = false;
-        alertItem.show = true;
-      }, 500, 1);
+        that.showInterval(alertItem);
 
-      $interval(function() {
-        if (!!alertItem.resetDelay) {
-          delete alertItem.resetDelay;
-          that.hide(alertItem, EzAlertConfig.delay);
-          
-          return;
-        }
-      }, 5, 100);
+        that.hide(that, alertItem, EzAlertConfig.delay);
+      }, 500, 1);
     }
   };
 }]);

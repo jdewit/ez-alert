@@ -27,7 +27,7 @@ angular.module('ez.alert', [])
       });
 
       scope.hideAlert = function(index) {
-        EzAlert.hide(scope.alerts[index], 0);
+        EzAlert.hide(EzAlert, scope.alerts[index], 0);
       };
     }
   };

@@ -18,12 +18,6 @@ angular.module('ez.alert', [])
     link: function(scope) {
       scope.$watch(EzAlert.get, function() {
         scope.alerts = EzAlert.get();
-
-        /*scope.$watch('alerts', function(newVal, oldVal) {
-          if (newVal !== oldVal) {
-            console.log(newVal);
-          }
-        }, true);*/
       });
 
       scope.hideAlert = function(index) {
@@ -33,7 +27,7 @@ angular.module('ez.alert', [])
   };
 }])
 
-.service('EzAlert', ['$interval', 'EzAlertConfig', function($interval, EzAlertConfig) {
+.service('EzAlert', ['$interval', '$sce', 'EzAlertConfig', function($interval, $sce, EzAlertConfig) {
   var alerts = [];
 
   return {
@@ -55,7 +49,7 @@ angular.module('ez.alert', [])
     add: function(type, msg, noClear) {
       var alertItem = {
         alertClass: EzAlertConfig[type + 'Class'],
-        msg: msg
+        msg: $sce.trustAsHtml(msg)
       };
 
       var duplicateFound = this.findDuplicates(alertItem);

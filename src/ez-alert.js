@@ -80,7 +80,7 @@ angular.module('ez.alert', [])
       for (var i = 0, l = alerts.length; i < l; i++) {
         var alertItem = alerts[i];
 
-        if (alertItem.alertClass === newAlert.alertClass && alertItem.msg === newAlert.msg) {
+        if (alertItem.alertClass === newAlert.alertClass && alertItem.msg.$$unwrapTrustedValue() === newAlert.msg.$$unwrapTrustedValue()) {
           that.hideAndShow(alertItem);
 
           return true;
